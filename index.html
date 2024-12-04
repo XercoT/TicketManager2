@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Manager</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Ticket Manager</h1>
+        </div>
+
+        <div class="section">
+            <h2>Dashboard</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Total Tickets</div>
+                    <div class="stat-value" id="totalTickets">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tickets Sold</div>
+                    <div class="stat-value" id="ticketsSold">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-value" id="totalRevenue">$0</div>
+                </div>
+            </div>
+            <div class="sync-section">
+                <button onclick="syncWithGoogleSheets()" class="sync-btn">
+                    <span>Sync with Google Sheets</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Ticket Management</h2>
+            <div class="ticket-tabs">
+                <button class="tab-btn active" onclick="switchTab('create')">Create Tickets</button>
+                <button class="tab-btn" onclick="switchTab('assign')">Assign Tickets</button>
+                <button class="tab-btn" onclick="switchTab('update')">Update Sales</button>
+            </div>
+
+            <div id="createTab" class="tab-content active">
+                <div class="input-group">
+                    <input type="number" id="ticketCount" placeholder="Number of tickets">
+                    <input type="number" id="ticketPrice" placeholder="Price per ticket" step="0.01">
+                    <button onclick="createTickets()">Create Tickets</button>
+                </div>
+            </div>
+
+            <div id="assignTab" class="tab-content">
+                <div class="input-group">
+                    <input type="text" id="sellerName" placeholder="New seller name">
+                    <button onclick="addSeller()">Add Seller</button>
+                </div>
+                <div class="input-group">
+                    <select id="sellerSelect">
+                        <option value="">Select Seller</option>
+                    </select>
+                    <button onclick="showAvailableTickets(document.getElementById('sellerSelect').value)">
+                        Show Available Tickets
+                    </button>
+                </div>
+            </div>
+
+            <div id="updateTab" class="tab-content">
+                <div class="input-group">
+                    <select id="sellerUpdateSelect">
+                        <option value="">Select Seller</option>
+                    </select>
+                    <button onclick="showSellerTickets(document.getElementById('sellerUpdateSelect').value, 'update')">
+                        Show Seller Tickets
+                    </button>
+                    <button onclick="showSellerTickets(document.getElementById('sellerUpdateSelect').value, 'unassign')">
+                        Unassign Tickets
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Seller Statistics</h2>
+            <div class="seller-grid" id="sellerStats">
+                <!-- Seller cards will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="loading" class="loading" style="display: none;">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
